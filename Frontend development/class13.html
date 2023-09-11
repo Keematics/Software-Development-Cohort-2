@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Welcome to javascript</h1>
+    <input type="checkbox" name="" id="">
+    <ul>
+        <li>one</li>
+        <li>two</li>
+        <li>three</li>
+    </ul>
+
+    <button id="btn">click</button>
+
+    <p id="para"></p>
+    <div id="newDiv">I'm a div</div>
+</body>
+
+<script>
+    // function add(x, y) {
+    //     let sum = x + y;
+    //     console.log(sum)
+    // }
+
+    let btn = document.getElementById('btn');
+    btn.addEventListener('click', function(){
+        let para = document.getElementById('para');
+        let newDiv = document.getElementById('newDiv');
+        para.innerHTML = "I'm getting called by a button";
+        para.style.padding = '10px';
+        para.style.border = 'none';
+        para.style.backgroundColor = 'blue';
+        para.style.color = '#fff';
+
+        //the styling is for div
+        newDiv.innerHTML = "I'm getting called by a button";
+        newDiv.style.padding = '10px';
+        newDiv.style.border = 'none';
+        newDiv.style.backgroundColor = 'red';
+        newDiv.style.color = '#fff';
+        newDiv.style.borderRadius = "10px";
+    })
+    
+
+    // function change() {
+    //     let para = document.getElementById('para');
+    //     let newDiv = document.getElementById('newDiv');
+    //     para.innerHTML = "I'm getting called by a button";
+    //     para.style.padding = '10px';
+    //     para.style.border = 'none';
+    //     para.style.backgroundColor = 'blue';
+    //     para.style.color = '#fff';
+
+    //     //the styling is for div
+    //     newDiv.innerHTML = "I'm getting called by a button";
+    //     newDiv.style.padding = '10px';
+    //     newDiv.style.border = 'none';
+    //     newDiv.style.backgroundColor = 'red';
+    //     newDiv.style.color = '#fff';
+    //     newDiv.style.borderRadius = "10px";
+    // }
+
+    let ulElement = document.createElement('ul');
+
+
+</script> 
+</html>
