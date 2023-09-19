@@ -1,0 +1,14 @@
+.testing {
+    background-color: red;
+    padding: 20px;
+    color: white;
+}
+
+.carousel-item {
+    height: 70vh;
+}
+
+.carousel-dark .carousel-control-prev-icon, .carousel-dark .carousel-control-next-icon {
+    color: white ;
+    filter: none ;
+}

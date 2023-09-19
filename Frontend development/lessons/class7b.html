@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Changing mode</title>
+    <style>
+        :root {
+            --white: #fdfdfd;
+            --black: #0d0d0d;
+        }
+        body {
+            background-color: var(--white);
+        }
+        h1 {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--black);
+            color: var(--white);
+        }
+        h2 {
+            border-bottom: 2px solid var(--black);
+            padding-bottom: 10px;
+            color: var(--black);
+        }
+        .container {
+            color: var(--black);
+        }
+    </style>
+</head>
+<body>
+    <h1>
+        Changing Mode
+    </h1>
+
+    <div class="container">
+        <h2>Lorem, ipsum.</h2>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti labore, aut ducimus facilis ullam quia? Nemo assumenda possimus omnis modi nobis soluta. Explicabo, reprehenderit. Sequi eaque optio modi iste sunt.</p>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque, tempore dolore. Doloremque eveniet saepe a sint iste eum iure molestias eaque nisi quis, fugiat vitae debitis tenetur et similique laborum.</p>
+        <p>
+            <button onclick="getMode()">Get Mode</button>
+            <button onclick="changeMode()">Change Mode</button>
+        </p>
+    </div>
+
+    <script>
+        var r = document.querySelector(":root")
+
+        
+        function getMode() {
+            var rs = getComputedStyle(r);
+            alert("The value of the background color is " + rs.getPropertyValue("--white"))
+        }
+        function changeMode() {
+            r.style.setProperty("--white", "#0d0d0d");
+            r.style.setProperty("--black", "#fdfdfd");
+        }
+    </script>
+</body>
+</html>

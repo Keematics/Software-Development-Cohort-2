@@ -1,0 +1,68 @@
+------- FONT AWESOME CDN -------------
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+--------- FONT AWESOME ICONS ---------------
+<i class="fa fa-cloud"></i>
+    <i class="fa fa-heart"></i>
+    <i class="fa fa-car"></i>
+    <i class="fa fa-file"></i>
+    <i class="fa fa-bars"></i>
+    <i class="fa fa-instagram" aria-hidden="true"></i>
+    <i class="fa fa-facebook-square" aria-hidden="true"></i>
+    <i class="fa fa-twitter" style="background-color: #b9dcee; color: #0f5880; padding: 6px; border-radius: 50%;" aria-hidden="true"></i>
+    <i class="fa fa-linkedin-square" aria-hidden="true"></i>
+
+---------- V A R I A B L E-------------
+------STYLE 
+ <style>
+
+ :root {
+    --blue: #1e90ff;
+    --white: #ffffff;
+ }
+        body {
+          background-color: #1e90ff;
+        }
+        
+        h2 {
+          border-bottom: 2px solid #1e90ff;
+        }
+        
+        .container {
+          color: #1e90ff;
+          background-color: #ffffff;
+          padding: 15px;
+        }
+        
+        button {
+          background-color: #ffffff;
+          color: #1e90ff;
+          border: 1px solid #1e90ff;
+          padding: 5px;
+        }
+        </style>
+
+----html
+ <h1>The Traditional Way</h1>
+
+<div class="container">
+  <h2>Lorem Ipsum</h2>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam semper diam at erat pulvinar, at pulvinar felis blandit.</p>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam semper diam at erat pulvinar, at pulvinar felis blandit.</p>
+  <p>
+    <button>Yes</button>
+    <button>No</button>
+  </p>
+  <p><button onclick="getColor()">Alert color</button><button onclick="setColor()">Change color</button></p>
+
+
+<script>
+    var r = document.querySelector(":root");
+    function getColor() {
+        var rs = getComputedStyle(r);
+        alert("The value of the blue color is " + rs.getPropertyValue("--blue"));
+    }
+    function setColor() {
+        r.style.setProperty("--blue", "yellow")
+    }
+  </script>

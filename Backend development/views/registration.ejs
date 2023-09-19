@@ -1,0 +1,67 @@
+<%- include ('partials/header') -%>
+
+
+    <div class="container">
+        <h1 class="text-center h1 mt-3 mb-3">
+            <%= title %>
+        </h1>
+        <div class="card">
+            <div class="card-header fs-5 fw-2">
+                <%= heading %>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="/register">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label>First Name</label>
+                                <input type="text" name="first_name" id="first_name" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label>Last Name</label>
+                                <input type="text" name="last_name" id="last_name" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label>Email</label>
+                                <input type="email" name="email" id="email" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label>Age</label>
+                                <input type="number" name="age" id="age" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label>State</label>
+                                <input type="text" name="state" id="state" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label>Gender</label>
+                                <select name="gender" class="form-control">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <input type="submit" name="submit_button" id="submit_button" class="btn btn-primary" value="Register" />
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+            <%- include ('partials/footer') -%>
