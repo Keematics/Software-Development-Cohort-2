@@ -1,0 +1,40 @@
+<%- include('partials/header') -%>
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">State</th>
+        <th scope="col">Gender</th>
+        <th scope="col">Age</th>
+        <th scope="col">Actions</th>
+
+      </tr>
+    </thead>
+    <tbody>
+        <% if(data.length > 0) { %>
+            <% data.forEach(trainee => { %>
+                <tr>
+                  <th scope="row"><%= trainee.id %></th>
+                  <td><%= trainee.first_name %></td>
+                  <td><%= trainee.last_name %></td>
+                  <td><%= trainee.email %></td>
+                  <td><%= trainee.state %></td>
+                  <td><%= trainee.gemder %></td>
+                  <td><%= trainee.age %></td>
+                  <td><a href=`${}`></a></td>
+                </tr>
+
+            <% }) %>
+    <% } else { %>
+        <td colspan="7">No Registered Trainees</td>
+        <% } %>
+    </tbody>
+  </table>
+
+  <div class="alert alert-info" role="alert">
+    Only <%= data.length %> people have registered
+  </div>

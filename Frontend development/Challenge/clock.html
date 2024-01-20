@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clock</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: url("clock_bg.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            height: 100vh;
+            background-position: left;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-weight: bold;
+        }
+.clock_title {
+    font-size: 25px;
+    padding-bottom: 20px;
+}
+        .clock_container {
+            display: flex;
+            gap: 10px;
+            justify-content: space-evenly;
+            align-items: end;
+        }
+
+        #hours,
+        #minutes,
+        #seconds {
+            width: 80px;
+            padding: 20px;
+            font-size: 20px;
+        }
+
+        .item {
+            background-color: rgb(230, 169, 169);
+            text-align: center;
+        }
+
+        .time {
+            background-color: rgb(239, 76, 76);
+            padding: 5px;
+        }
+
+        #meridian {
+            padding: 5px;
+            background-color: blueviolet;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h3 class="clock_title">Digital Clock</h3>
+    </header>
+    <div class="clock_container">
+        <div class="item">
+            <div id="hours">00</div>
+            <p class="time">Hours</p>
+        </div>
+        <div class="item minutes">
+            <div id="minutes">00</div>
+            <p class="time">Minutes</p>
+        </div>
+        <div class="item seconds">
+            <div id="seconds">00</div>
+            <p class="time">Seconds</p>
+        </div>
+        <div class="item" id="meridian"></div>
+    </div>
+
+    <script>
+        let hr_element = document.getElementById("hours");
+        let minutes_element = document.getElementById("minutes");
+        let seconds_element = document.getElementById("seconds");
+        let meridian = document.getElementById("meridian");
+        let isAM;
+        function getTime() {
+            let time = new Date();
+            let hours = time.getHours() % 12 || 12; //if the remainder is 0, 12 will be used instead
+            let minutes = time.getMinutes();
+            let seconds = time.getSeconds()
+            isAM = time.getHours() < 12 ? "AM" : "PM"
+            meridian.innerHTML = isAM;
+            if (hours < 10) {
+                hr_element.innerHTML = "0" + hours;
+            } else {
+                // console.log(hours)
+                hr_element.innerHTML = hours;
+            }
+            if (minutes < 10) {
+                minutes_element.innerHTML = "0" + minutes;
+            } else {
+                minutes_element.innerHTML = minutes;
+            }
+            if (seconds < 10) {
+                seconds_element.innerHTML = "0" + seconds
+            } else {
+                seconds_element.innerHTML = seconds
+            }
+        }
+        setInterval(() => {
+            getTime()
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -24,10 +24,10 @@ app.set('view engine', 'ejs');
 
 // the createConnection() method configures the mysql user details.
 const db = mysql.createConnection({
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DB,
+    host: 'localhost',
+    user: "root",
+    password: '',
+    database: 'testing_db',
 });
 // connect() is a method which connect our backend application to the mysql database
 db.connect((err) => {
@@ -85,6 +85,18 @@ const {first_name, last_name, age, gender, state, email} = req.body;
 
 })
 
+app.get('/trainees', (req, res) => {
+    let query = `SELECT * FROM new_trainee`;
+    db.query(query, function (error, data) {
+       
+                if (error) {
+                    throw error;
+                }
+                
+                res.status(200).render('all-trainees', { data: data })
+            })
+
+})
 
 
 app.listen(8000, function () {
