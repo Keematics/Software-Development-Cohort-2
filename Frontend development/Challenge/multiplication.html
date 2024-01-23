@@ -24,7 +24,7 @@
 
         .card {
             background-color: white;
-            width: 300px;
+            width: 100%;
             min-width: 30%;
             padding: 10px;
             border-radius: 5px;
@@ -64,9 +64,11 @@
             color: white;
 
         }
+
         #confirm_btn:hover {
             background-color: rgb(64, 231, 175);
         }
+
         .report {
             display: flex;
             justify-content: space-around;
@@ -82,17 +84,35 @@
         button {
             cursor: pointer;
         }
-        #start_btn {
+
+        #start_btn,
+        #end_btn {
             padding: 3px;
         }
+
         button:disabled {
             cursor: not-allowed;
         }
+
         #right {
             border: 2px solid green;
         }
+
         #wrong {
             border: 2px solid red;
+        }
+
+        .score {
+            text-align: end;
+        }
+
+        .game_container {
+            background-color: rgb(188, 241, 245);
+            padding: 20px;
+            width: 40%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .card_header {
@@ -102,21 +122,31 @@
     </style>
 </head>
 <body>
-    <div class="card">
-        <div class="card_header">
-            <button onclick="startGame()" id="start_btn">start</button>
-            <p>Score: <b id="score">0</b></p>
+    <div class="game_container">
+        <div class="game_control">
+            <button id="start_btn">start</button>
+            <button onclick="endGame()" id="end_btn">End</button>
+            <button onclick="clear()" id="clear_btn">Clear</button>
+
         </div>
 
-        <h4 id="question">What is <span id="first_number"></span> multiplied by <span id="second_number"></span>?</h4>
-        <div id="input_div"><input type="number" name="" id="input_number" placeholder="Enter your answer"></div>
-        <button id="confirm_btn" disabled>Confirm</button>
+        <div class="card">
+            <div class="card_header">
+                <p>Countdown: <b id="countdown">0</b></p>
+                <p class="score">Score: <b id="score">0</b></p>
+            </div>
 
-        <div class="report">
-            <p>Missed: <b id="wrong">0</b></p>
-            <p>Got: <b id="right">0</b></p>
+            <h4 id="question">What is <span id="first_number">X</span> multiplied by <span id="second_number">Y</span>?
+            </h4>
+            <div id="input_div"><input type="number" name="" id="input_number" placeholder="Enter your answer"></div>
+            <button id="confirm_btn" disabled>Confirm</button>
+
+            <div class="report">
+                <p>Missed: <b id="wrong">0</b></p>
+                <p>Got: <b id="right">0</b></p>
+            </div>
+            <div class="questions">Total questions answered: <b id="total_questions">0</b></div>
         </div>
-        <div class="questions">Total questions answered: <b id="total_questions">0</b></div>
     </div>
 
     <script>
@@ -129,17 +159,46 @@
         let input_number = document.getElementById("input_number");
         let btn = document.getElementById("btn");
         let start_btn = document.getElementById("start_btn")
+        let countdown = document.getElementById("countdown");
+        let time_left = 5;
+        let timer;
         const questions = [];
         let current_question = []
         let isStart = false;
 
 
+        start_btn.addEventListener("click", () => {
+            startGame();
+            startCountdown();
+        })
+        function endGame() {
+            clearInterval(timer)
+            // countdown.innerHTML = 0
+            first_number.innerHTML = "X",
+                second_number.innerHTML = "Y"
+            start_btn.disabled = false;
+            start_btn.style.cursor = "pointer";
+            confirm_btn.disabled = true;
+        }
+        function startCountdown() {
+            timer = setInterval(() => {
+                countDown();
+            }, 1000)
+
+        }
         function getRndInteger(min, max) {
             return Math.floor(Math.random() * (max - min)) + min;
         }
         confirm_btn.addEventListener("click", () => {
             calculate(current_question)
+            clearInterval(timer)
+            time_left == 5;
+            timer = setInterval(() => {
+
+                countDown();
+            }, 1000);
             generateQuestion()
+            startCountdown()
         })
 
         function generateQuestion() {
@@ -151,6 +210,7 @@
             current_question = []
             current_question.push(Number(first_number.innerHTML))
             current_question.push(Number(second_number.innerHTML))
+            // callback();
         }
         function startGame() {
             let random_first_number = getRndInteger(1, 13)
@@ -166,8 +226,31 @@
             current_question.push(Number(first_number.innerHTML), Number(second_number.innerHTML))
             isStart = true;
             confirm_btn.disabled = false
+            confirm_btn.style.cursor = "pointer";
+
         }
-        
+        function countDown() {
+            time_left--;
+            time_left = time_left < 0 ? 0 : time_left;
+            // let [student_answer, right_answer] = calculate(current_question)
+            // let isCorrect = student_answer === right_answer ? true : false
+            if (time_left == 0 && input_number.innerHTML == "") {
+                wrong.innerHTML++
+                score.innerHTML--
+                time_left = 5
+                generateQuestion()
+            }
+            countdown.innerHTML = time_left;
+            // if(time_left < 0) {
+            //     clearInterval(timer)
+            //     time = 5;
+
+            // } else {
+            //     countdown.innerHTML = time_left--;
+            // }
+
+        }
+
         function calculate(operands) {
             questions.push(operands)
             console.log(operands)
@@ -184,6 +267,7 @@
             }
             total_questions.innerHTML = questions.length
             console.log(total_questions.innerHTML)
+            return [student_answer, right_answer]
         }
     </script>
 </body>
