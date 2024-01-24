@@ -150,17 +150,28 @@
     </div>
 
     <script>
-        let score = document.getElementById("score");
+        let score_el = document.getElementById("score");
         let first_number = document.getElementById("first_number");
         let second_number = document.getElementById("second_number");
         let wrong = document.getElementById("wrong");
         let right = document.getElementById("right");
         let total_questions_el = document.getElementById("total_questions");
-        let total_questions = 0;
-        let player_answer = document.getElementById("input_number").value;
+        let score = 0;
+        let total_question = 0;
+        let missed = 0;
+        let got = 0;
+        let question;
+        let first_random_number;
+        let second_random_number;
+        let question_el = document.getElementById("question");
+        let default_question = `What is the multiplication of X by Y?`
+        let player_answer = document.getElementById("input_number");
+        let input_el = document.getElementById("input_number")
         let start_btn = document.getElementById("start_btn")
         let countdown = document.getElementById("countdown");
+        let right_answer;
         let time_left = 5;
+        let isAnswerTrue = false;
         let timer;
         const questions = [];
         let current_question = []
@@ -169,118 +180,111 @@
 
         start_btn.addEventListener("click", () => {
             startGame();
-            startCountdown();
+            startCounter();
         })
         function endGame() {
             clearInterval(timer)
-            // countdown.innerHTML = 0
-            first_number.innerHTML = "X",
-                second_number.innerHTML = "Y"
+            countdown.innerHTML = 0
+            question_el.innerHTML = default_question;
             start_btn.disabled = false;
             start_btn.style.cursor = "pointer";
+            confirm_btn.style.cursor = "not-allowed";
             confirm_btn.disabled = true;
         }
-        function startCountdown() {
+        function startCounter() {
             timer = setInterval(() => {
                 countDown();
             }, 1000)
 
         }
+        // clearInterval(timer)
+
         function getRndInteger(min, max) {
             return Math.floor(Math.random() * (max - min)) + min;
         }
-        confirm_btn.addEventListener("click", () => {
-            calculateAgain()
-            clearInterval(timer)
-            countdown.innerHTML = 0;
-            time_left = 0
-            timer = setInterval(() => {
 
-                countDown();
-            }, 1000);
-            generateQuestion()
-        })
-
-        function generateQuestion() {
-            let random_first_number = getRndInteger(1, 13)
-            let random_second_number = getRndInteger(1, 13)
-
-            first_number.innerHTML = random_first_number;
-            second_number.innerHTML = random_second_number;
-            current_question = []
-            current_question.push(Number(first_number.innerHTML))
-            current_question.push(Number(second_number.innerHTML))
-            total_questions.innerHTML = questions.length
-            // callback();
-        }
         function startGame() {
-            let random_first_number = getRndInteger(1, 13)
-            let random_second_number = getRndInteger(1, 13)
+            generateQuestion()
             if (isStart) {
                 console.log("Your game has already begun!")
                 return
             }
             start_btn.disabled = true
             start_btn.style.cursor = "not-allowed";
-            first_number.innerHTML = random_first_number;
-            second_number.innerHTML = random_second_number;
-            current_question.push(Number(first_number.innerHTML), Number(second_number.innerHTML))
             isStart = true;
             confirm_btn.disabled = false
             confirm_btn.style.cursor = "pointer";
 
         }
+
+
+        function saveScores() {
+            localStorage.setItem("score", JSON.stringify(score))
+            localStorage.setItem("missed", JSON.stringify(missed))
+            localStorage.setItem("got", JSON.stringify(got))
+            localStorage.setItem("total_question", JSON.stringify(total_question))
+        }
+        function updateScores() {
+            let new_score = JSON.parse(localStorage.getItem("score"))
+            let new_missed = JSON.parse(localStorage.getItem("missed"))
+            let new_got = JSON.parse(localStorage.getItem("got"))
+            let new_total_question = JSON.parse(localStorage.getItem("total_question"))
+            new_score++; new_missed++; new_got++; new_total_question++;
+            localStorage.setItem("score", JSON.stringify(new_score))
+            localStorage.setItem("missed", JSON.stringify(new_missed))
+            localStorage.setItem("got", JSON.stringify(new_got))
+            localStorage.setItem("total_question", JSON.stringify(new_total_question))
+            // console.log(new_got, new_missed, new_total_question, new_score)
+            return [new_score, new_missed, new_got, new_total_question]
+        }
+        // updateScores()
+        // saveScores()
+        confirm_btn.addEventListener("click", () => {
+            calculateAgain()
+            input_el.value = ""
+            clearInterval(timer)
+            countdown.innerHTML = 0;
+            time_left = 0;
+            time_left = 5
+            timer = setInterval(() => {
+
+                countDown();
+            }, 1000);
+        })
+        function calculateAgain() {
+            right_answer = first_random_number * second_random_number;
+            console.log(player_answer.value)
+            if (player_answer === right_answer) {
+                isAnswerTrue = true;
+                console.log('true')
+                return isAnswerTrue;
+            }
+        }
+
+        function updateBrowser() {
+
+        }
         function countDown() {
             time_left--;
             time_left = time_left < 0 ? 0 : time_left;
-            if (time_left == 0 && input_number.innerHTML == "") {
+            if (time_left < 1) {
                 wrong.innerHTML++
-                score.innerHTML--
-                // calculateAgain()
-                time_left = 5
-                // generateQuestion()
-                // total_questions.innerHTML = questions.length
+                score_el.innerHTML--
+                total_question++;
+                total_questions_el.innerHTML = total_question
+                generateQuestion()
             }
             countdown.innerHTML = time_left;
         }
-
-        // function calculate(operands) {
-            
-        //     questions.push(operands)
-        //     console.log(operands)
-        //     let [a, b] = operands
-        //     let student_answer = Number(input_number.value);
-        //     let right_answer = a * b
-        //     input_number.value = "";
-        //     if (student_answer === right_answer) {
-        //         right.innerHTML++
-        //         score.innerHTML++
-        //     } else {
-        //         wrong.innerHTML++
-        //         score.innerHTML--
-        //     }
-        //     total_questions.innerHTML = questions.length
-        //     console.log(total_questions.innerHTML)
-        //     return [student_answer, right_answer]
-        // }
-
-        function calculateAgain() {
-            questions.push(current_question)
-            let [a, b] = current_question;
-            let student_answer = Number(input_number.value);
-            let right_answer = a * b
-            input_number.value = "";
-            if (student_answer === right_answer) {
-                right.innerHTML++
-                score.innerHTML++
-            } else {
-                wrong.innerHTML++
-                score.innerHTML--
-            }
-            total_questions.innerHTML = questions.length
-            console.log(total_questions.innerHTML)
-            // return [student_answer, right_answer]
+        function generateQuestion() {
+            first_random_number = getRndInteger(1, 13)
+            second_random_number = getRndInteger(1, 13)
+            question = `What is the multiplication of ${first_random_number} by ${second_random_number}?`
+            question_el.innerHTML = question;
         }
+
+
+
     </script>
 </body>
 </html>
