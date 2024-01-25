@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplication Challenge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-image: url("dice-2415399_1280.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .card {
+            background-color: white;
+            width: 100%;
+            min-width: 30%;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #score {
+            text-align: end;
+        }
+
+        #question {
+            margin-top: 10px;
+        }
+
+        #input_div {
+            width: 100%;
+            margin-bottom: 13px;
+        }
+
+        input {
+            width: 100%;
+            padding: 3px;
+            margin: 10px 0;
+            border: 1px solid green;
+            outline: none;
+        }
+
+        input::placeholder {
+            color: grey;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        #confirm_btn {
+            width: 100%;
+            background-color: rgb(9, 188, 129);
+            border: none;
+            padding: 5px;
+            color: white;
+
+        }
+
+        #confirm_btn:hover {
+            background-color: rgb(64, 231, 175);
+        }
+
+        .report {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+        }
+
+        #wrong,
+        #right {
+            padding: 3px 6px;
+            border-radius: 3px;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        #start_btn,
+        #end_btn {
+            padding: 3px;
+        }
+
+        button:disabled {
+            cursor: not-allowed;
+        }
+
+        #right {
+            border: 2px solid green;
+        }
+
+        #wrong {
+            border: 2px solid red;
+        }
+
+        .score {
+            text-align: end;
+        }
+
+        .game_container {
+            background-color: rgb(188, 241, 245);
+            padding: 20px;
+            width: 40%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card_header {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <div class="game_container">
+        <div class="game_control">
+            <button id="start_btn">start</button>
+            <button onclick="endGame()" id="end_btn">End</button>
+            <button onclick="clear()" id="clear_btn">Clear</button>
+
+        </div>
+
+        <div class="card">
+            <div class="card_header">
+                <p>Countdown: <b id="countdown">0</b></p>
+                <p class="score">Score: <b id="score">0</b></p>
+            </div>
+
+            <h4 id="question">What is <span id="first_number">X</span> multiplied by <span id="second_number">Y</span>?
+            </h4>
+            <div id="input_div"><input type="number" name="" id="input_number" placeholder="Enter your answer"></div>
+            <button id="confirm_btn" disabled>Confirm</button>
+
+            <div class="report">
+                <p>Missed: <b id="wrong">0</b></p>
+                <p>Got: <b id="right">0</b></p>
+            </div>
+            <div class="questions">Total questions answered: <b id="total_questions">0</b></div>
+        </div>
+    </div>
+
+    <script>
+        let score_el = document.getElementById("score");
+        let first_number = document.getElementById("first_number");
+        let second_number = document.getElementById("second_number");
+        let wrong = document.getElementById("wrong");
+        let right = document.getElementById("right");
+        let total_questions_el = document.getElementById("total_questions");
+        let score = 0;
+        let total_question = 0;
+        let missed = 0;
+        let got = 0;
+        let question;
+        let first_random_number;
+        let second_random_number;
+        let question_el = document.getElementById("question");
+        let default_question = `What is the multiplication of X by Y?`
+        let player_answer = document.getElementById("input_number");
+        let input_el = document.getElementById("input_number")
+        let start_btn = document.getElementById("start_btn")
+        let countdown = document.getElementById("countdown");
+        let right_answer;
+        let time_left = 5;
+        let isAnswerTrue = false;
+        let timer;
+        const questions = [];
+        let current_question = []
+        let isStart = false;
+
+
+        start_btn.addEventListener("click", () => {
+            startGame();
+            startCounter();
+        })
+        function endGame() {
+            clearInterval(timer)
+            countdown.innerHTML = 0
+            question_el.innerHTML = default_question;
+            start_btn.disabled = false;
+            start_btn.style.cursor = "pointer";
+            confirm_btn.style.cursor = "not-allowed";
+            confirm_btn.disabled = true;
+        }
+        function startCounter() {
+            timer = setInterval(() => {
+                countDown();
+            }, 1000)
+
+        }
+        // clearInterval(timer)
+
+        function getRndInteger(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+
+        function startGame() {
+            generateQuestion()
+            if (isStart) {
+                console.log("Your game has already begun!")
+                return
+            }
+            start_btn.disabled = true
+            start_btn.style.cursor = "not-allowed";
+            isStart = true;
+            confirm_btn.disabled = false
+            confirm_btn.style.cursor = "pointer";
+
+        }
+
+
+        function saveScores() {
+            localStorage.setItem("score", JSON.stringify(score))
+            localStorage.setItem("missed", JSON.stringify(missed))
+            localStorage.setItem("got", JSON.stringify(got))
+            localStorage.setItem("total_question", JSON.stringify(total_question))
+        }
+        function updateScores() {
+            let new_score = JSON.parse(localStorage.getItem("score"))
+            let new_missed = JSON.parse(localStorage.getItem("missed"))
+            let new_got = JSON.parse(localStorage.getItem("got"))
+            let new_total_question = JSON.parse(localStorage.getItem("total_question"))
+            new_score++; new_missed++; new_got++; new_total_question++;
+            localStorage.setItem("score", JSON.stringify(new_score))
+            localStorage.setItem("missed", JSON.stringify(new_missed))
+            localStorage.setItem("got", JSON.stringify(new_got))
+            localStorage.setItem("total_question", JSON.stringify(new_total_question))
+            // console.log(new_got, new_missed, new_total_question, new_score)
+            return [new_score, new_missed, new_got, new_total_question]
+        }
+        // updateScores()
+        // saveScores()
+        confirm_btn.addEventListener("click", () => {
+            calculateAgain()
+            input_el.value = ""
+            clearInterval(timer)
+            countdown.innerHTML = 0;
+            time_left = 0;
+            time_left = 5
+            timer = setInterval(() => {
+
+                countDown();
+            }, 1000);
+        })
+        function calculateAgain() {
+            right_answer = first_random_number * second_random_number;
+            console.log(player_answer.value)
+            if (player_answer === right_answer) {
+                isAnswerTrue = true;
+                console.log('true')
+                return isAnswerTrue;
+            }
+        }
+
+        function updateBrowser() {
+
+        }
+        function countDown() {
+            time_left--;
+            time_left = time_left < 0 ? 0 : time_left;
+            if (time_left < 1) {
+                wrong.innerHTML++
+                score_el.innerHTML--
+                total_question++;
+                total_questions_el.innerHTML = total_question
+                generateQuestion()
+            }
+            countdown.innerHTML = time_left;
+        }
+        function generateQuestion() {
+            first_random_number = getRndInteger(1, 13)
+            second_random_number = getRndInteger(1, 13)
+            question = `What is the multiplication of ${first_random_number} by ${second_random_number}?`
+            question_el.innerHTML = question;
+        }
+
+
+
+    </script>
+</body>
+</html>
