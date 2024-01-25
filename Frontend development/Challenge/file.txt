@@ -1,0 +1,25 @@
+let missed = 0;
+        let got = 0;
+
+
+function saveScores() {
+            localStorage.setItem("score", JSON.stringify(score))
+            localStorage.setItem("missed", JSON.stringify(missed))
+            localStorage.setItem("got", JSON.stringify(got))
+            localStorage.setItem("total_question", JSON.stringify(total_question))
+        }
+        function updateScores() {
+            let new_score = JSON.parse(localStorage.getItem("score"))
+            let new_missed = JSON.parse(localStorage.getItem("missed"))
+            let new_got = JSON.parse(localStorage.getItem("got"))
+            let new_total_question = JSON.parse(localStorage.getItem("total_question"))
+            new_score++; new_missed++; new_got++; new_total_question++;
+            localStorage.setItem("score", JSON.stringify(new_score))
+            localStorage.setItem("missed", JSON.stringify(new_missed))
+            localStorage.setItem("got", JSON.stringify(new_got))
+            localStorage.setItem("total_question", JSON.stringify(new_total_question))
+            // console.log(new_got, new_missed, new_total_question, new_score)
+            return [new_score, new_missed, new_got, new_total_question]
+        }
+        // updateScores()
+        // saveScores()
