@@ -40,7 +40,13 @@
 
         #input_div {
             width: 100%;
-            margin-bottom: 13px;
+        }
+
+        .error_message {
+            color: red;
+            font-size: small;
+            margin: -10px 0 10px;
+            text-align: left;
         }
 
         input {
@@ -126,7 +132,6 @@
         <div class="game_control">
             <button id="start_btn">start</button>
             <button onclick="endGame()" id="end_btn">End</button>
-            <button onclick="clear()" id="clear_btn">Clear</button>
 
         </div>
 
@@ -139,6 +144,7 @@
             <h4 id="question">What is <span id="first_number">X</span> multiplied by <span id="second_number">Y</span>?
             </h4>
             <div id="input_div"><input type="number" name="" id="input_number" placeholder="Enter your answer"></div>
+            <p class="error_message"></p>
             <button id="confirm_btn" disabled>Confirm</button>
 
             <div class="report">
@@ -151,6 +157,8 @@
 
     <script>
         let score_el = document.getElementById("score");
+        let error_el = document.querySelector(".error_message");
+        let error_message = "Error: Please input your answer!"
         let first_number = document.getElementById("first_number");
         let second_number = document.getElementById("second_number");
         let wrong = document.getElementById("wrong");
@@ -158,8 +166,6 @@
         let total_questions_el = document.getElementById("total_questions");
         let score = 0;
         let total_question = 0;
-        let missed = 0;
-        let got = 0;
         let question;
         let first_random_number;
         let second_random_number;
@@ -170,11 +176,9 @@
         let start_btn = document.getElementById("start_btn")
         let countdown = document.getElementById("countdown");
         let right_answer;
-        let time_left = 5;
-        let isAnswerTrue = false;
+        let time_left = 0;
+        let isAnswerCorrect = false;
         let timer;
-        const questions = [];
-        let current_question = []
         let isStart = false;
 
 
@@ -190,6 +194,7 @@
             start_btn.style.cursor = "pointer";
             confirm_btn.style.cursor = "not-allowed";
             confirm_btn.disabled = true;
+            isStart = false;
         }
         function startCounter() {
             timer = setInterval(() => {
@@ -197,18 +202,15 @@
             }, 1000)
 
         }
-        // clearInterval(timer)
 
         function getRndInteger(min, max) {
             return Math.floor(Math.random() * (max - min)) + min;
         }
 
         function startGame() {
+            time_left = 5;
             generateQuestion()
-            if (isStart) {
-                console.log("Your game has already begun!")
-                return
-            }
+            if (isStart) console.log("Your game has already begun!");
             start_btn.disabled = true
             start_btn.style.cursor = "not-allowed";
             isStart = true;
@@ -217,53 +219,41 @@
 
         }
 
-
-        function saveScores() {
-            localStorage.setItem("score", JSON.stringify(score))
-            localStorage.setItem("missed", JSON.stringify(missed))
-            localStorage.setItem("got", JSON.stringify(got))
-            localStorage.setItem("total_question", JSON.stringify(total_question))
-        }
-        function updateScores() {
-            let new_score = JSON.parse(localStorage.getItem("score"))
-            let new_missed = JSON.parse(localStorage.getItem("missed"))
-            let new_got = JSON.parse(localStorage.getItem("got"))
-            let new_total_question = JSON.parse(localStorage.getItem("total_question"))
-            new_score++; new_missed++; new_got++; new_total_question++;
-            localStorage.setItem("score", JSON.stringify(new_score))
-            localStorage.setItem("missed", JSON.stringify(new_missed))
-            localStorage.setItem("got", JSON.stringify(new_got))
-            localStorage.setItem("total_question", JSON.stringify(new_total_question))
-            // console.log(new_got, new_missed, new_total_question, new_score)
-            return [new_score, new_missed, new_got, new_total_question]
-        }
-        // updateScores()
-        // saveScores()
         confirm_btn.addEventListener("click", () => {
-            calculateAgain()
+            calculate()
             input_el.value = ""
             clearInterval(timer)
             countdown.innerHTML = 0;
-            time_left = 0;
             time_left = 5
             timer = setInterval(() => {
 
                 countDown();
             }, 1000);
         })
-        function calculateAgain() {
+        function calculate() {
             right_answer = first_random_number * second_random_number;
-            console.log(player_answer.value)
-            if (player_answer === right_answer) {
-                isAnswerTrue = true;
-                console.log('true')
-                return isAnswerTrue;
+            isAnswerCorrect = right_answer === Number(player_answer.value) ? true : false;
+
+            if (player_answer.value === "" || player_answer.value === undefined) {
+                error_el.innerHTML = error_message;
+                setTimeout(() => {
+                    error_el.innerHTML = "";
+                }, 2000);
+            } else if (isAnswerCorrect) {
+                right.innerHTML++
+                score_el.innerHTML++
+                total_question++;
+                total_questions_el.innerHTML = total_question
+                generateQuestion()
+            } else {
+                wrong.innerHTML++
+                score_el.innerHTML--
+                total_question++;
+                total_questions_el.innerHTML = total_question
+                generateQuestion()
             }
         }
 
-        function updateBrowser() {
-
-        }
         function countDown() {
             time_left--;
             time_left = time_left < 0 ? 0 : time_left;
@@ -273,6 +263,7 @@
                 total_question++;
                 total_questions_el.innerHTML = total_question
                 generateQuestion()
+                time_left = 5;
             }
             countdown.innerHTML = time_left;
         }
